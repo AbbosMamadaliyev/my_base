@@ -53,7 +53,7 @@ class _InputInfoPageState extends State<InputInfoPage> {
                     ),
                   ),
                 ),*/
-                Text(model.categoryNameController.text),
+                Text(model.categoryText),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).push(

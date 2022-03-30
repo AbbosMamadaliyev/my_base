@@ -12,6 +12,7 @@ class InputDataPageModel extends ChangeNotifier {
   final titleController = TextEditingController();
 
   int categoryId = 5;
+  String categoryText = 'category';
 
   List<Category> items = [
     /*'Bank va gos. organ',
@@ -23,14 +24,18 @@ class InputDataPageModel extends ChangeNotifier {
   ];
 
   void addCategory(Color color) {
-    final category =
+    categoryText = categoryNameController.text;
+    print('text: $categoryText');
+    notifyListeners();
+
+    /*  final category =
         Category(name: categoryNameController.text, color: color.toString());
     print('name: ${category.name}, color: ${category.color}');
     dbRepository.addCategory(category);
 
     dbRepository.getCategory().then((value) {
       print(value.length);
-    });
+    });*/
   }
 
   void getCategory() {
