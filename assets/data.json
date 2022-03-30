@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": "0",
+      "password": "pass123",
+      "categories": [
+        "bank",
+        "cart"
+      ]
+    },
+    {
+      "id": "1",
+      "password": "kiki2323",
+      "categories": [
+        "ijtimoiy tarmoqlar"
+      ]
+    }
+  ]
+}
