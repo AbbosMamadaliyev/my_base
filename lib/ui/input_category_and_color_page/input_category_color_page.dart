@@ -70,7 +70,7 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
     );
   }
 }
-// demo
+// second
 
 List<Color> colors = [
   Color(0xffb85430),
