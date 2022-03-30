@@ -113,4 +113,20 @@ class LocalDataRepository {
       throw '$e';
     }
   }
+
+  Future<List<DataModel>> getAllData() async {
+    final database = db.database;
+    try {
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db.query('data');
+
+      return List.generate(
+        maps.length,
+        (index) => DataModel.fromMap(maps[index]),
+      );
+    } catch (e) {
+      print(' error: $e');
+      throw '$e';
+    }
+  }
 }

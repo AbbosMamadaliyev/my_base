@@ -28,7 +28,8 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             const Text('category name'),
             const SizedBox(height: 8),
             TextField(
-              controller: model.categoryNameController,
+              controller: categoryController,
+              // onChanged: model.onChangedCategory,
               decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
             const SizedBox(height: 24),
@@ -58,9 +59,11 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             ElevatedButton(
               onPressed: () {
                 // model.categoryNameController.text = categoryController.text;
+
                 final color = colors[selectIndex];
-                context.read<InputDataPageModel>().addCategory(color);
-                Navigator.pop(context);
+                // context.read<InputDataPageModel>().addCategory();
+
+                Navigator.pop(context, [categoryController.text, color]);
               },
               child: const Text('add'),
             ),

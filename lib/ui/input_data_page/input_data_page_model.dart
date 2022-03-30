@@ -11,8 +11,11 @@ class InputDataPageModel extends ChangeNotifier {
   final filePathController = TextEditingController();
   final titleController = TextEditingController();
 
-  int categoryId = 5;
-  String categoryText = 'category';
+  int categoryId = -1;
+  String categoryText = 'Kategoriyasiz';
+  String errorText = '';
+
+  List<DataModel> dataList = [];
 
   List<Category> items = [
     /*'Bank va gos. organ',
@@ -23,8 +26,14 @@ class InputDataPageModel extends ChangeNotifier {
     'Kategoriyasiz',*/
   ];
 
-  void addCategory(Color color) {
-    categoryText = categoryNameController.text;
+  onChangedCategory(String value) {
+    categoryText = value;
+    print(categoryText);
+    notifyListeners();
+  }
+
+  void addCategory(/*Color color*/) {
+    // categoryText = text;
     print('text: $categoryText');
     notifyListeners();
 
@@ -46,19 +55,43 @@ class InputDataPageModel extends ChangeNotifier {
     });
   }
 
+  void getAllData() {
+    dbRepository.getAllData().then((value) {
+      dataList.clear();
+      dataList.addAll(value);
+      notifyListeners();
+    });
+  }
+
   void onChangedDropdownBtn(String? value) {
     categoryNameController.text = value!;
     _chooseCategoryId(value);
     notifyListeners();
   }
 
-  void addData() {
+  void addData(Color color, String categoryname, BuildContext context) {
+    print('category text :${categoryname}');
+    if (categoryname.isEmpty) {
+      categoryname = 'Kategoriyasiz';
+    } else {
+      for (DataModel data in dataList) {
+        if (data.category_name == categoryname) {
+          print('bunday categoriya mavjud');
+          errorText =
+              'bunday kategoriya mavjud, iltimos yangi kategoriya kiriting';
+          notifyListeners();
+          return;
+        }
+      }
+    }
+
     final dataModel = DataModel.add(
       username: usernameController.text,
       password: passwordController.text,
       filePath: filePathController.text,
       title: titleController.text,
-      category_id: categoryId,
+      category_name: categoryname,
+      color: color.toString(),
     );
 
     dbRepository.addData(dataModel);
@@ -67,6 +100,8 @@ class InputDataPageModel extends ChangeNotifier {
     usernameController.clear();
     filePathController.clear();
     passwordController.clear();
+
+    Navigator.of(context).pop();
   }
 
   void _chooseCategoryId(String value) {

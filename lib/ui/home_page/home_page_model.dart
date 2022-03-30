@@ -14,7 +14,7 @@ class HomePageModel extends ChangeNotifier {
 
   final List<Credentials> _credentials = [];
   final List<TitleModel> _titles = [];
-  final List<List<DataModel>> _datas = [];
+  final List<DataModel> _allData = [];
   final List<DataModel> _data = [];
 
   List<Category> categories = [];
@@ -25,7 +25,7 @@ class HomePageModel extends ChangeNotifier {
 
   List<TitleModel> get titles => _titles;
 
-  List<List<DataModel>> get datas => _datas;
+  List<DataModel> get allData => _allData;
 
   /*Future<List<Credentials>> _getCredentials(int category_id) async {
     final database = db.database;
@@ -111,6 +111,14 @@ class HomePageModel extends ChangeNotifier {
     _getData(categoryId).then((value) {
       _data.clear();
       _data.addAll(value);
+      notifyListeners();
+    });
+  }
+
+  getAllData() {
+    dbRepository.getAllData().then((value) {
+      _allData.clear();
+      _allData.addAll(value);
       notifyListeners();
     });
   }

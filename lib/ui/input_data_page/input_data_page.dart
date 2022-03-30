@@ -18,6 +18,16 @@ class _InputInfoPageState extends State<InputInfoPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    context.read<InputDataPageModel>().getAllData();
+  }
+
+  String category = 'category';
+  Color color = Color(0xff0c7d46);
+
+  @override
   Widget build(BuildContext context) {
     final model = context.watch<InputDataPageModel>();
 
@@ -53,13 +63,18 @@ class _InputInfoPageState extends State<InputInfoPage> {
                     ),
                   ),
                 ),*/
-                Text(model.categoryText),
+                Text(category),
                 IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const InputCategoryPage()),
-                    );
+                  onPressed: () async {
+                    final result =
+                        await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const InputCategoryPage(),
+                    ));
+                    // category = result[0];
+                    setState(() {
+                      category = result[0];
+                      color = result[1];
+                    });
                   },
                   icon: const Icon(Icons.add),
                 ),
@@ -98,7 +113,16 @@ class _InputInfoPageState extends State<InputInfoPage> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
-                context.read<InputDataPageModel>().addData();
+                context
+                    .read<InputDataPageModel>()
+                    .addData(color, category, context);
+
+                if (model.errorText.isEmpty) return;
+
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(model.errorText),
+                  backgroundColor: Colors.red,
+                ));
               },
               child: const Text('add'),
             ),

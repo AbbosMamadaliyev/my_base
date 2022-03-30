@@ -26,21 +26,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<HomePageModel>().getCategory();
+    context.read<HomePageModel>().getAllData();
   }
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<HomePageModel>();
 
-    final datas = model.data;
+    final allData = model.allData;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('my informations'),
       ),
       body: GridView.builder(
-          itemCount: model.categories.length,
+          itemCount: allData.length,
           padding: const EdgeInsets.all(12),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: 2.1,
@@ -52,11 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
             // model.setCategoryId(index);
             // Color color = model.categories[index].color as Color;
 
-            // final data = datas[index];
+            final data = allData[index];
 
-            String valueString = model.categories[index].color!
-                .split('(0x')[1]
-                .split(')')[0]; // kind of hacky..
+            String valueString =
+                data.color!.split('(0x')[1].split(')')[0]; // kind of hacky..
             int value = int.parse(valueString, radix: 16);
             Color otherColor = new Color(value);
 
@@ -79,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Text(
                         // items[index],
-                        model.categories[index].name!,
+                        data.category_name,
                         style: const TextStyle(
                             // color: Colors.white,
                             fontSize: 18,
