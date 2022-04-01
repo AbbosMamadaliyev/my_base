@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:my_base/ui/input_data_page/input_data_page.dart';
+import 'package:my_base/ui/input_data_page/input_data_page_model.dart';
 import 'package:provider/provider.dart';
 
 import '../view_data_page/view_data_page.dart';
@@ -17,6 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     context.read<HomePageModel>().getCategory();
+    context.read<InputDataPageModel>().getCategory();
   }
 
   @override

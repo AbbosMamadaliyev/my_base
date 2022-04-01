@@ -57,10 +57,10 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    'Yangi kategoriya qo\'shildi',
-                    style: TextStyle(
+                    model.errorText,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
@@ -71,9 +71,7 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
                 final color = colors[selectIndex];
                 context
                     .read<InputDataPageModel>()
-                    .addCategory(color, categoryController.text);
-
-                Navigator.pop(context, [categoryController.text, color]);
+                    .addCategory(color, categoryController.text, context);
               },
               child: const Text('add'),
             ),

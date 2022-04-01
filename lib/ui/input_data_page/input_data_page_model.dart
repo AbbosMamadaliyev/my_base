@@ -11,43 +11,55 @@ class InputDataPageModel extends ChangeNotifier {
   final filePathController = TextEditingController();
   final titleController = TextEditingController();
 
+  List<Category> categories = [];
+
   int categoryId = 5;
   String categoryText = 'category';
+  String errorText = '';
 
-  List<Category> items = [
-    /*'Bank va gos. organ',
-    'Ish',
-    'Universitet',
-    'Ijtimoiy tarmoqlar',
-    'Dastur va ilovalar',
-    'Kategoriyasiz',*/
-  ];
+  void getCategory() {
+    dbRepository.getCategory().then((value) {
+      categories.clear();
+      categories.addAll(value);
+      notifyListeners();
+    });
+  }
 
-  void addCategory(Color color, String categoryName) {
-    /* categoryText = categoryNameController.text;
-    print('text: $categoryText');
-    notifyListeners();*/
-    if(categoryName == )
-    if(categoryName.isEmpty){
-
+  void addCategory(Color color, String categoryName, BuildContext context) {
+    if (categoryName.isEmpty) {
+      categoryName = 'Kategoriyasiz';
     }
+
+    for (Category category in categories) {
+      if (category.name == categoryName) {
+        errorText =
+            'bunday kategoriya mavjud, iltimos yangi kategoriya kiriting';
+        notifyListeners();
+        return;
+      }
+    }
+
+    errorText = 'Yangi kategoriya qo\'shildi';
+    notifyListeners();
 
     final category = Category.add(name: categoryName, color: color.toString());
     print('name: ${category.name}, color: ${category.color}');
     dbRepository.addCategory(category);
 
+    Navigator.pop(context, [categoryName, color]);
+
     dbRepository.getCategory().then((value) {
       print(value.length);
     });
   }
-
+/*
   void getCategory() {
     dbRepository.getCategory().then((value) {
       items.clear();
       items.addAll(value);
       notifyListeners();
     });
-  }
+  }*/
 
   void onChangedDropdownBtn(String? value) {
     categoryNameController.text = value!;
