@@ -67,29 +67,32 @@ class _InputInfoPageState extends State<InputInfoPage> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            content: SingleChildScrollView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Container(
-                                width: double.maxFinite,
-                                child: Column(
-                                  // mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    OutlinedButton(
-                                      onPressed: () async {
-                                        result = await Navigator.of(context)
-                                            .popAndPushNamed(
-                                                MainNavigationRouteNames
-                                                    .inputCategoryPage);
-                                        setState(() {
-                                          categoryName = result[0];
-                                        });
-                                      },
-                                      child: const Text('new category'),
-                                    ),
-                                    ListView.builder(
+                            content: SizedBox(
+                              width: double.maxFinite,
+                              height: 450,
+                              child: ListView(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      result = await Navigator.of(context)
+                                          .popAndPushNamed(
+                                              MainNavigationRouteNames
+                                                  .inputCategoryPage);
+                                      setState(() {
+                                        categoryName = result[0];
+                                      });
+                                    },
+                                    child: const Text('new category'),
+                                  ),
+                                  ListView.builder(
                                       itemBuilder: (context, index) {
                                         return OutlinedButton(
                                           onPressed: () {
+                                            model.idCategory =
+                                                categories[index].id!;
+
                                             setState(() {
                                               categoryName =
                                                   categories[index].name!;
@@ -101,9 +104,9 @@ class _InputInfoPageState extends State<InputInfoPage> {
                                       },
                                       itemCount: categories.length,
                                       shrinkWrap: true,
-                                    ),
-                                  ],
-                                ),
+                                      physics:
+                                          const NeverScrollableScrollPhysics()),
+                                ],
                               ),
                             ),
                           );
@@ -146,7 +149,24 @@ class _InputInfoPageState extends State<InputInfoPage> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
-                context.read<InputDataPageModel>().addData();
+                if (model.idCategory == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('iltimos kategoriyani kiriting'),
+                    backgroundColor: Colors.red,
+                  ));
+                  return;
+                }
+                context.read<InputDataPageModel>().addData(context);
+
+                model.errorText.isEmpty
+                    ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Yaratildi'),
+                        backgroundColor: Colors.red,
+                      ))
+                    : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(model.errorText),
+                        backgroundColor: Colors.red,
+                      ));
               },
               child: const Text('add'),
             ),

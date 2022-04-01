@@ -51,12 +51,24 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
                     child: CircleAvatar(
                       radius: 12,
                       backgroundColor: colors[index],
+                      child: Icon(
+                        Icons.done,
+                        color: selectIndex == index
+                            ? Colors.white
+                            : Colors.transparent,
+                      ),
                     ),
                   );
                 }),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
+                final color = colors[selectIndex];
+
+                context
+                    .read<InputDataPageModel>()
+                    .addCategory(color, categoryController.text, context);
+
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     model.errorText,
@@ -67,11 +79,6 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
                   ),
                   backgroundColor: Colors.black87,
                 ));
-
-                final color = colors[selectIndex];
-                context
-                    .read<InputDataPageModel>()
-                    .addCategory(color, categoryController.text, context);
               },
               child: const Text('add'),
             ),

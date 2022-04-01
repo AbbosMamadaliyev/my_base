@@ -1,28 +1,24 @@
-class DataModel {
+class Credentials {
   int? id;
   final int category_id;
   final String? username;
   final String? password;
-  final String? filePath;
-  final String title;
+  bool? isVisibility;
 
-  static const String tableName = 'data';
+  static const String tableName = 'credentials';
 
-  DataModel({
+  Credentials({
     required this.id,
     required this.category_id,
-    required this.username,
-    required this.password,
-    required this.filePath,
-    required this.title,
+    this.username,
+    this.password,
+    this.isVisibility = false,
   });
 
-  DataModel.add({
+  Credentials.add({
     required this.category_id,
     required this.username,
     required this.password,
-    required this.filePath,
-    required this.title,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,19 +27,15 @@ class DataModel {
       'category_id': this.category_id,
       'username': this.username,
       'password': this.password,
-      'filePath': this.filePath,
-      'title': this.title,
     };
   }
 
-  factory DataModel.fromMap(Map<String, dynamic> map) {
-    return DataModel(
+  factory Credentials.fromMap(Map<String, dynamic> map) {
+    return Credentials(
       id: map['id'] as int,
       category_id: map['category_id'] as int,
       username: map['username'] as String,
       password: map['password'] as String,
-      filePath: map['filePath'] as String,
-      title: map['title'] as String,
     );
   }
 }

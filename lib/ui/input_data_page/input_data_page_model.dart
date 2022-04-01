@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/categories.dart';
-import 'package:my_base/domain/models/data_model.dart';
+
+import '../../domain/models/credentials.dart';
+import '../../domain/models/title.dart';
 
 class InputDataPageModel extends ChangeNotifier {
   final dbRepository = LocalDataRepository();
@@ -12,6 +14,7 @@ class InputDataPageModel extends ChangeNotifier {
   final titleController = TextEditingController();
 
   List<Category> categories = [];
+  int? idCategory;
 
   int categoryId = 5;
   String categoryText = 'category';
@@ -33,7 +36,7 @@ class InputDataPageModel extends ChangeNotifier {
     for (Category category in categories) {
       if (category.name == categoryName) {
         errorText =
-            'bunday kategoriya mavjud, iltimos yangi kategoriya kiriting';
+            'bunday kategoriya mavjud, iltimos yangi kategoriya kiriting yoki mavjud kategoriyani tanlang';
         notifyListeners();
         return;
       }
@@ -44,72 +47,56 @@ class InputDataPageModel extends ChangeNotifier {
 
     final category = Category.add(name: categoryName, color: color.toString());
     print('name: ${category.name}, color: ${category.color}');
-    dbRepository.addCategory(category);
-
-    Navigator.pop(context, [categoryName, color]);
-
-    dbRepository.getCategory().then((value) {
-      print(value.length);
-    });
-  }
-/*
-  void getCategory() {
-    dbRepository.getCategory().then((value) {
-      items.clear();
-      items.addAll(value);
+    dbRepository.addCategory(category).then((value) {
+      idCategory = value;
+      print('id: $idCategory');
       notifyListeners();
     });
-  }*/
 
-  void onChangedDropdownBtn(String? value) {
-    categoryNameController.text = value!;
-    _chooseCategoryId(value);
-    notifyListeners();
+    Navigator.pop(context, [categoryName, color]);
   }
 
-  void addData() {
-    final dataModel = DataModel.add(
-      username: usernameController.text,
+  void _addData() {
+    if (idCategory == null) {
+      print('nullku id');
+      return;
+    }
+
+    final title =
+        TitleModel.add(category_id: idCategory!, title: titleController.text);
+
+    final credentials = Credentials.add(
+      category_id: idCategory!,
       password: passwordController.text,
-      filePath: filePathController.text,
-      title: titleController.text,
-      category_id: categoryId,
+      username: usernameController.text,
     );
 
-    dbRepository.addData(dataModel);
+    dbRepository.addCredentials(credentials);
+    dbRepository.addTitle(title);
+
+    errorText = '';
+    notifyListeners();
 
     titleController.clear();
-    usernameController.clear();
-    filePathController.clear();
     passwordController.clear();
+    usernameController.clear();
   }
 
-  void _chooseCategoryId(String value) {
-    switch (value) {
-      case 'Bank va gos. organ':
-        categoryId = 0;
-        notifyListeners();
-        break;
-      case 'Ish':
-        categoryId = 1;
-        notifyListeners();
-        break;
-      case 'Universitet':
-        categoryId = 2;
-        notifyListeners();
-        break;
-      case 'Ijtimoiy tarmoqlar':
-        categoryId = 3;
-        notifyListeners();
-        break;
-      case 'Dastur va ilovalar':
-        categoryId = 4;
-        notifyListeners();
-        break;
-      case 'Kategoriyasiz':
-        categoryId = 5;
-        notifyListeners();
-        break;
+  void addData(BuildContext context) {
+    print(titleController.text);
+    if (titleController.text.isEmpty) {
+      errorText = 'title bo\'sh bo\'lishi mumkin emas. Iltimos nimadir yozing!';
+      notifyListeners();
+      return;
     }
+
+    _addData();
+
+    if (errorText.isNotEmpty) return;
+
+    idCategory = null;
+    notifyListeners();
+
+    Navigator.of(context).pop();
   }
 }

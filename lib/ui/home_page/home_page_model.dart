@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/credentials.dart';
-import 'package:my_base/domain/models/data_model.dart';
 import 'package:my_base/domain/models/title.dart';
 
 import '../../domain/models/categories.dart';
@@ -16,18 +15,12 @@ class HomePageModel extends ChangeNotifier {
 
   final List<Credentials> _credentials = [];
   final List<TitleModel> _titles = [];
-  final List<List<DataModel>> _datas = [];
-  final List<DataModel> _data = [];
 
   List<Category> categories = [];
 
   List<Credentials> get credentials => _credentials;
 
-  List<DataModel> get data => _data;
-
   List<TitleModel> get titles => _titles;
-
-  List<List<DataModel>> get datas => _datas;
 
   List<String> defaultPass = [];
 
@@ -44,12 +37,25 @@ class HomePageModel extends ChangeNotifier {
     });
   }
 
-  getCredentialsByCategoryId(int categoryId) {
+  _getCredentialsByCategoryId(int categoryId) {
     dbRepository.getCredentialsByCategoryId(categoryId).then((value) {
       _credentials.clear();
       _credentials.addAll(value);
       notifyListeners();
     });
+  }
+
+  _getTitlesByCategoryId(int categoryId) {
+    dbRepository.getTitlesByCategoryId(categoryId).then((value) {
+      _titles.clear();
+      _titles.addAll(value);
+      notifyListeners();
+    });
+  }
+
+  getDataByCategoryId(int categoryId) {
+    _getCredentialsByCategoryId(categoryId);
+    _getTitlesByCategoryId(categoryId);
   }
 
   void fullDefault() {
@@ -76,7 +82,7 @@ class HomePageModel extends ChangeNotifier {
     }
   }
 
-  // delete
+  /*// delete
   Future<int?> _deleteItem(int id) async {
     final database = await db.database;
     return database.delete(
@@ -84,9 +90,9 @@ class HomePageModel extends ChangeNotifier {
       whereArgs: [id],
       where: 'id = ?',
     );
-  }
+  }*/
 
-  void deleteItem(int id, int index) {
+  /*void deleteItem(int id, int index) {
     _deleteItem(id);
-  }
+  }*/
 }

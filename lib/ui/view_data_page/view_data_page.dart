@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../home_page/home_page_model.dart';
@@ -18,7 +19,7 @@ class _ViewDataPageState extends State<ViewDataPage> {
 
   @override
   void didChangeDependencies() {
-    context.watch<HomePageModel>().getCredentialsByCategoryId(widget.id);
+    context.watch<HomePageModel>().getDataByCategoryId(widget.id);
     super.didChangeDependencies();
   }
 
@@ -26,13 +27,14 @@ class _ViewDataPageState extends State<ViewDataPage> {
   Widget build(BuildContext context) {
     final model = context.watch<HomePageModel>();
     final credentials = model.credentials;
+    final titles = model.titles;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('data'),
       ),
       body: ListView.builder(
-          itemCount: credentials.length,
+          itemCount: titles.length,
           itemBuilder: (context, index) {
             return Card(
               margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -42,8 +44,33 @@ class _ViewDataPageState extends State<ViewDataPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'username: ${credentials[index].username!}',
-                      style: const TextStyle(fontSize: 16),
+                      '--- ${titles[index].title}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'username:   ${credentials[index].username!}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                    text: credentials[index].username))
+                                .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "username copied to clipboard")));
+                            });
+                          },
+                          icon: const Icon(Icons.copy),
+                        ),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,8 +80,9 @@ class _ViewDataPageState extends State<ViewDataPage> {
                           style: TextStyle(fontSize: 16),
                         ),
                         SizedBox(
-                          width: 180,
+                          width: 150,
                           child: TextField(
+                            enabled: false,
                             controller: TextEditingController(
                                 text: credentials[index].password!),
                             obscureText: obscureText,
@@ -72,6 +100,19 @@ class _ViewDataPageState extends State<ViewDataPage> {
                           icon: obscureText
                               ? const Icon(Icons.visibility)
                               : const Icon(Icons.visibility_off),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                    text: credentials[index].password))
+                                .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "password copied to clipboard")));
+                            });
+                          },
+                          icon: const Icon(Icons.copy),
                         ),
                       ],
                     ),

@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:my_base/domain/models/credentials.dart';
+import 'package:my_base/domain/models/title.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/categories.dart';
-import '../models/data_model.dart';
 
 class LocalDataProvider {
   LocalDataProvider._();
@@ -88,31 +88,24 @@ class LocalDataRepository {
     }
   }
 
-  Future<int?> addData(DataModel dataModel) async {
+  Future<int?> addTitle(TitleModel titleModel) async {
     final database = await db.database;
     final res = database.insert(
-      DataModel.tableName,
-      dataModel.toMap(),
+      TitleModel.tableName,
+      titleModel.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     return res;
   }
 
-  Future<List<DataModel>> getData(int categoryId) async {
-    final database = db.database;
-    try {
-      final db = await database;
-      List<Map<String, dynamic>> maps = await db
-          .rawQuery('SELECT * FROM data WHERE category_id = $categoryId');
-
-      return List.generate(
-        maps.length,
-        (index) => DataModel.fromMap(maps[index]),
-      );
-    } catch (e) {
-      print(' error: $e');
-      throw '$e';
-    }
+  Future<int?> addCredentials(Credentials credentials) async {
+    final database = await db.database;
+    final res = database.insert(
+      Credentials.tableName,
+      credentials.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return res;
   }
 
   Future<List<Credentials>> getCredentialsByCategoryId(int categoryId) async {
@@ -125,6 +118,23 @@ class LocalDataRepository {
       return List.generate(
         maps.length,
         (index) => Credentials.fromMap(maps[index]),
+      );
+    } catch (e) {
+      print(' error: $e');
+      throw '$e';
+    }
+  }
+
+  Future<List<TitleModel>> getTitlesByCategoryId(int categoryId) async {
+    final database = db.database;
+    try {
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db
+          .rawQuery('SELECT * FROM title WHERE category_id = $categoryId');
+
+      return List.generate(
+        maps.length,
+        (index) => TitleModel.fromMap(maps[index]),
       );
     } catch (e) {
       print(' error: $e');
