@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:my_base/domain/models/credentials.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -107,6 +108,23 @@ class LocalDataRepository {
       return List.generate(
         maps.length,
         (index) => DataModel.fromMap(maps[index]),
+      );
+    } catch (e) {
+      print(' error: $e');
+      throw '$e';
+    }
+  }
+
+  Future<List<Credentials>> getCredentialsByCategoryId(int categoryId) async {
+    final database = db.database;
+    try {
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db.rawQuery(
+          'SELECT * FROM credentials WHERE category_id = $categoryId');
+
+      return List.generate(
+        maps.length,
+        (index) => Credentials.fromMap(maps[index]),
       );
     } catch (e) {
       print(' error: $e');

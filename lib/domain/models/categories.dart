@@ -1,12 +1,17 @@
 class Category {
-  final int? id;
+  int? id;
   final String? name;
   final String? color;
 
   static const String tableName = 'categories';
 
-  const Category({
-    this.id,
+  Category({
+    required this.id,
+    required this.name,
+    required this.color,
+  });
+
+  Category.add({
     required this.name,
     required this.color,
   });

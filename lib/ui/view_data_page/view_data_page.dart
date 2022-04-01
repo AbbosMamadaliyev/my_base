@@ -5,36 +5,34 @@ import 'package:provider/provider.dart';
 import '../home_page/home_page_model.dart';
 
 class ViewDataPage extends StatefulWidget {
-  final int index;
+  final int id;
 
-  const ViewDataPage({Key? key, required this.index}) : super(key: key);
+  const ViewDataPage({Key? key, required this.id}) : super(key: key);
 
   @override
   _ViewDataPageState createState() => _ViewDataPageState();
 }
 
 class _ViewDataPageState extends State<ViewDataPage> {
-  bool isVisibilityPass = false;
-  String pass = '***********';
+  bool obscureText = true;
 
   @override
   void didChangeDependencies() {
-    context.watch<HomePageModel>().getData(widget.index);
+    context.watch<HomePageModel>().getCredentialsByCategoryId(widget.id);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<HomePageModel>();
-
-    final datas = model.data;
+    final credentials = model.credentials;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('data'),
+        title: const Text('data'),
       ),
       body: ListView.builder(
-          itemCount: datas.length,
+          itemCount: credentials.length,
           itemBuilder: (context, index) {
             return Card(
               margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -43,10 +41,54 @@ class _ViewDataPageState extends State<ViewDataPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      'username: ${credentials[index].username!}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(datas[index].title),
+                        const Text(
+                          'password: ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                          width: 180,
+                          child: TextField(
+                            controller: TextEditingController(
+                                text: credentials[index].password!),
+                            obscureText: obscureText,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                          icon: obscureText
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+    );
+  }
+}
+
+/*
+    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('title'),
                         Row(
                           children: [
                             IconButton(
@@ -74,11 +116,6 @@ class _ViewDataPageState extends State<ViewDataPage> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              context
-                                                  .read<HomePageModel>()
-                                                  .deleteItem(
-                                                      datas[index].id!, index);
-
                                               Navigator.of(context).pop();
                                             },
                                             child: const Text('yes'),
@@ -96,39 +133,5 @@ class _ViewDataPageState extends State<ViewDataPage> {
                         ),
                       ],
                     ),
-                    Text(
-                      'username: ${datas[index].username!}',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'password: $pass',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisibilityPass = !isVisibilityPass;
-                              pass = isVisibilityPass
-                                  ? datas[index].password!
-                                  : '***********';
-                              print(pass);
-                              print(isVisibilityPass);
-                            });
-                          },
-                          icon: isVisibilityPass
-                              ? const Icon(Icons.visibility)
-                              : const Icon(Icons.visibility_off),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-    );
-  }
-}
+
+* */

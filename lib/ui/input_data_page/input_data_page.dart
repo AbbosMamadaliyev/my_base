@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:provider/provider.dart';
 
-import '../input_category_and_color_page/input_category_color_page.dart';
+import '../../main_navigation.dart';
 import 'input_data_page_model.dart';
 
 class InputInfoPage extends StatefulWidget {
@@ -12,14 +13,20 @@ class InputInfoPage extends StatefulWidget {
 }
 
 class _InputInfoPageState extends State<InputInfoPage> {
+  dynamic result;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<HomePageModel>().getCategory();
   }
+
+  String categoryName = '';
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<InputDataPageModel>();
+    final categories = context.watch<HomePageModel>().categories;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,13 +60,54 @@ class _InputInfoPageState extends State<InputInfoPage> {
                     ),
                   ),
                 ),*/
-                Text(model.categoryText),
+                Text('category: $categoryName'),
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const InputCategoryPage()),
-                    );
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: SingleChildScrollView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: Container(
+                                width: double.maxFinite,
+                                child: Column(
+                                  // mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    OutlinedButton(
+                                      onPressed: () async {
+                                        result = await Navigator.of(context)
+                                            .popAndPushNamed(
+                                                MainNavigationRouteNames
+                                                    .inputCategoryPage);
+                                        setState(() {
+                                          categoryName = result[0];
+                                        });
+                                      },
+                                      child: const Text('new category'),
+                                    ),
+                                    ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        return OutlinedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              categoryName =
+                                                  categories[index].name!;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(categories[index].name!),
+                                        );
+                                      },
+                                      itemCount: categories.length,
+                                      shrinkWrap: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
                   },
                   icon: const Icon(Icons.add),
                 ),

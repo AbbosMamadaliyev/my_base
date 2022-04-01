@@ -28,7 +28,7 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             const Text('category name'),
             const SizedBox(height: 8),
             TextField(
-              controller: model.categoryNameController,
+              controller: categoryController,
               decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
             const SizedBox(height: 24),
@@ -57,10 +57,23 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                // model.categoryNameController.text = categoryController.text;
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                    'Yangi kategoriya qo\'shildi',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  backgroundColor: Colors.black87,
+                ));
+
                 final color = colors[selectIndex];
-                context.read<InputDataPageModel>().addCategory(color);
-                Navigator.pop(context);
+                context
+                    .read<InputDataPageModel>()
+                    .addCategory(color, categoryController.text);
+
+                Navigator.pop(context, [categoryController.text, color]);
               },
               child: const Text('add'),
             ),

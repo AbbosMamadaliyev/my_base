@@ -23,19 +23,22 @@ class InputDataPageModel extends ChangeNotifier {
     'Kategoriyasiz',*/
   ];
 
-  void addCategory(Color color) {
-    categoryText = categoryNameController.text;
+  void addCategory(Color color, String categoryName) {
+    /* categoryText = categoryNameController.text;
     print('text: $categoryText');
-    notifyListeners();
+    notifyListeners();*/
+    if(categoryName == )
+    if(categoryName.isEmpty){
 
-    /*  final category =
-        Category(name: categoryNameController.text, color: color.toString());
+    }
+
+    final category = Category.add(name: categoryName, color: color.toString());
     print('name: ${category.name}, color: ${category.color}');
     dbRepository.addCategory(category);
 
     dbRepository.getCategory().then((value) {
       print(value.length);
-    });*/
+    });
   }
 
   void getCategory() {

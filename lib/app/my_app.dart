@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_base/main_navigation.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:provider/provider.dart';
 
@@ -9,8 +10,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mainNavigation = MainNavigation();
+
     return MaterialApp(
       home: const FirstWidget(),
+      routes: mainNavigation.routes,
     );
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:my_base/ui/input_data_page/input_data_page.dart';
-import 'package:my_base/ui/view_data_page/view_data_page.dart';
 import 'package:provider/provider.dart';
 
-import '../input_data_page/input_data_page_model.dart';
+import '../view_data_page/view_data_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -14,15 +13,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> items = [
-    'Bank va gos. organ',
-    'Ish',
-    'Universitet',
-    'Ijtimoiy tarmoqlar',
-    'Dastur va ilovalar',
-    'Kategoriyasiz',
-  ];
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -32,8 +22,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<HomePageModel>();
-
-    final datas = model.data;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,26 +37,21 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisSpacing: 4,
           ),
           itemBuilder: (context, index) {
-            // model.setCategoryId(index);
-            // Color color = model.categories[index].color as Color;
-
-            // final data = datas[index];
+            int categoryId = model.categories[index].id!;
 
             String valueString = model.categories[index].color!
                 .split('(0x')[1]
                 .split(')')[0]; // kind of hacky..
             int value = int.parse(valueString, radix: 16);
-            Color otherColor = new Color(value);
+            Color otherColor = Color(value);
 
             return GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider(
-                        create: (BuildContext context) => HomePageModel(),
-                        child: ViewDataPage(index: index)),
-                  ),
-                );
+                print('id: $categoryId');
+
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ViewDataPage(id: categoryId),
+                ));
               },
               child: Card(
                 color: otherColor,
@@ -78,10 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        // items[index],
                         model.categories[index].name!,
                         style: const TextStyle(
-                            // color: Colors.white,
+                            color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
@@ -96,24 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }),
       floatingActionButton: FloatingActionButton(
-        mini: true,
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider(
-                  create: (BuildContext context) => InputDataPageModel(),
-                  child: const InputInfoPage())));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const InputInfoPage()));
         },
         child: const Icon(Icons.add),
       ),
     );
   }
-
-  List<Color> colors = [
-    Color(0xff14b3b3),
-    Color(0xff1914b3),
-    Color(0xff9614b3),
-    Color(0xffdc3db4),
-    Color(0xff2c871c),
-    Color(0xff29b684),
-  ];
 }
