@@ -50,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
             return GestureDetector(
               onTap: () {
                 print('id: $categoryId');
+                /* context.read<HomePageModel>().getDataByCategoryId(categoryId);
+                print('list: ${model.credentials.length}');*/
 
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ViewDataPage(id: categoryId),

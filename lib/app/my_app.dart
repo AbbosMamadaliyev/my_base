@@ -14,6 +14,20 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       home: const FirstWidget(),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: Color(0xff0e0c0c),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Color(0xff0e0c0c),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+            Color(0xff0e0c0c),
+          )),
+        ),
+      ),
       routes: mainNavigation.routes,
     );
   }

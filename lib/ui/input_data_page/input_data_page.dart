@@ -47,20 +47,13 @@ class _InputInfoPageState extends State<InputInfoPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /*SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: model.categoryNameController.text,
-                    ),
-                    enabled: false,
-                    decoration: const InputDecoration(
-                      hintText: 'category',
-                      border: OutlineInputBorder(),
-                    ),
+                Text(
+                  'category: $categoryName',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                ),*/
-                Text('category: $categoryName'),
+                ),
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -84,7 +77,11 @@ class _InputInfoPageState extends State<InputInfoPage> {
                                         categoryName = result[0];
                                       });
                                     },
-                                    child: const Text('new category'),
+                                    child: const Text(
+                                      'new category',
+                                      style:
+                                          TextStyle(color: Color(0xff0e0c0c)),
+                                    ),
                                   ),
                                   ListView.builder(
                                       itemBuilder: (context, index) {
@@ -99,7 +96,16 @@ class _InputInfoPageState extends State<InputInfoPage> {
                                             });
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text(categories[index].name!),
+                                          child: Text(
+                                            categories[index].name!,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    const Color(0xff0e0c0c)),
+                                          ),
                                         );
                                       },
                                       itemCount: categories.length,

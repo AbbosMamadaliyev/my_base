@@ -12,7 +12,7 @@ class Credentials {
     required this.category_id,
     this.username,
     this.password,
-    this.isVisibility = false,
+    this.isVisibility = true,
   });
 
   Credentials.add({

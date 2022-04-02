@@ -19,7 +19,9 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
     final model = context.watch<InputDataPageModel>();
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Enter category name'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

@@ -88,21 +88,21 @@ class LocalDataRepository {
     }
   }
 
-  Future<int?> addTitle(TitleModel titleModel) async {
-    final database = await db.database;
-    final res = database.insert(
-      TitleModel.tableName,
-      titleModel.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    return res;
-  }
-
   Future<int?> addCredentials(Credentials credentials) async {
     final database = await db.database;
     final res = database.insert(
       Credentials.tableName,
       credentials.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return res;
+  }
+
+  Future<int?> addTitle(TitleModel titleModel) async {
+    final database = await db.database;
+    final res = database.insert(
+      TitleModel.tableName,
+      titleModel.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     return res;
@@ -140,5 +140,23 @@ class LocalDataRepository {
       print(' error: $e');
       throw '$e';
     }
+  }
+
+  Future<int?> deleteTitle(int id) async {
+    final database = await db.database;
+    return database.delete(
+      TitleModel.tableName,
+      whereArgs: [id],
+      where: 'id = ?',
+    );
+  }
+
+  Future<int?> deleteCredentials(int id) async {
+    final database = await db.database;
+    return database.delete(
+      Credentials.tableName,
+      whereArgs: [id],
+      where: 'id = ?',
+    );
   }
 }
