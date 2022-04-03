@@ -88,6 +88,22 @@ class LocalDataRepository {
     }
   }
 
+  Future<List<TitleModel>> getAllTitle() async {
+    final database = db.database;
+    try {
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db.query('title');
+
+      return List.generate(
+        maps.length,
+        (index) => TitleModel.fromMap(maps[index]),
+      );
+    } catch (e) {
+      print(' error: $e');
+      throw '$e';
+    }
+  }
+
   Future<int?> addCredentials(Credentials credentials) async {
     final database = await db.database;
     final res = database.insert(
@@ -157,6 +173,42 @@ class LocalDataRepository {
       Credentials.tableName,
       whereArgs: [id],
       where: 'id = ?',
+    );
+  }
+
+  // update, edit
+  Future<int?> updateTitle(TitleModel title) async {
+    final database = await db.database;
+    return database.update(
+      TitleModel.tableName,
+      title.toMap(),
+      where: 'id = ?',
+      whereArgs: [title.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // update, edit
+  Future<int?> updateCredentials(Credentials credentials) async {
+    final database = await db.database;
+    return database.update(
+      Credentials.tableName,
+      credentials.toMap(),
+      where: 'id = ?',
+      whereArgs: [credentials.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // update, edit
+  Future<int?> updateCategory(Category category) async {
+    final database = await db.database;
+    return database.update(
+      Category.tableName,
+      category.toMap(),
+      where: 'id = ?',
+      whereArgs: [category.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 }

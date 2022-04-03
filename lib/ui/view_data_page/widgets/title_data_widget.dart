@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_base/ui/view_data_page/view_data_page_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main_navigation.dart';
 import '../../home_page/home_page_model.dart';
 
 class TitleDataWidget extends StatelessWidget {
@@ -12,14 +13,16 @@ class TitleDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titles = context.watch<HomePageModel>().titles;
-    final title = titles[index].title;
+    final credentials = context.watch<HomePageModel>().credentials;
+    final titleModel = titles[index];
+    final credential = credentials[index];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
-            '---  $title',
+            '---  ${titleModel.title}',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -31,7 +34,13 @@ class TitleDataWidget extends StatelessWidget {
         Row(
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(MainNavigationRouteNames.editItems, arguments: {
+                  'titleModel': titleModel,
+                  'credential': credential,
+                });
+              },
               icon: const Icon(
                 Icons.edit,
                 color: Colors.green,
