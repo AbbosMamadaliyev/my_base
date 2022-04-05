@@ -46,6 +46,16 @@ class HomePageModel extends ChangeNotifier {
     _getCredentialsByCategoryId(categoryId);
     _getTitlesByCategoryId(categoryId);
   }
+
+  void deleteData(int categoryId) {
+    dbRepository.deleteCredentials(categoryId);
+    dbRepository.deleteTitle(categoryId);
+    dbRepository.deleteCategory(categoryId);
+  }
+
+  void getAllTitles() {
+    dbRepository.getAllTitle().then((value) => print('data: ${value.length}'));
+  }
 }
 
 /*// delete

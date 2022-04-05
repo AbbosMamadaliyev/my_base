@@ -49,7 +49,7 @@ class _InputInfoPageState extends State<InputInfoPage> {
               children: [
                 Text(
                   'category: $categoryName',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -98,8 +98,9 @@ class _InputInfoPageState extends State<InputInfoPage> {
                                           },
                                           child: Text(
                                             categories[index].name!,
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           style: ButtonStyle(
                                             backgroundColor:
@@ -120,12 +121,6 @@ class _InputInfoPageState extends State<InputInfoPage> {
                   },
                   icon: const Icon(Icons.add),
                 ),
-                /* DropdownButton<String>(
-                  elevation: 0,
-                  underline: Container(),
-                  items: buildDropDownMenuItems(model.items),
-                  onChanged: model.onChangedDropdownBtn,
-                ),*/
               ],
             ),
             const SizedBox(height: 8),
@@ -145,13 +140,6 @@ class _InputInfoPageState extends State<InputInfoPage> {
               ),
             ),
             const SizedBox(height: 8),
-            /*TextField(
-              controller: model.filePathController,
-              decoration: const InputDecoration(
-                hintText: 'file',
-                border: OutlineInputBorder(),
-              ),
-            ),*/
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {

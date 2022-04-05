@@ -31,6 +31,7 @@ class _InputCategoryPageState extends State<InputCategoryPage> {
             const SizedBox(height: 8),
             TextField(
               controller: categoryController,
+              autofocus: true,
               decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
             const SizedBox(height: 24),

@@ -158,19 +158,28 @@ class LocalDataRepository {
     }
   }
 
-  Future<int?> deleteTitle(int id) async {
+  Future<int?> deleteTitle(int category_id) async {
     final database = await db.database;
     return database.delete(
       TitleModel.tableName,
-      whereArgs: [id],
-      where: 'id = ?',
+      whereArgs: [category_id],
+      where: 'category_id = ?',
     );
   }
 
-  Future<int?> deleteCredentials(int id) async {
+  Future<int?> deleteCredentials(int category_id) async {
     final database = await db.database;
     return database.delete(
       Credentials.tableName,
+      whereArgs: [category_id],
+      where: 'category_id = ?',
+    );
+  }
+
+  Future<int?> deleteCategory(int id) async {
+    final database = await db.database;
+    return database.delete(
+      Category.tableName,
       whereArgs: [id],
       where: 'id = ?',
     );

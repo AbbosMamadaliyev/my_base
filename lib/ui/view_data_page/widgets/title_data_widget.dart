@@ -22,11 +22,11 @@ class TitleDataWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            '---  ${titleModel.title}',
+            '${index + 1}.   ${titleModel.title}',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
