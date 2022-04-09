@@ -11,8 +11,6 @@ class UsernameDataWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final username = context.select<HomePageModel, String>(
-    //     (value) => value.credentials[index].username ?? '');
     final username = context.watch<HomePageModel>().credentials[index].username;
 
     return Row(

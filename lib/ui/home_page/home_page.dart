@@ -4,6 +4,7 @@ import 'package:my_base/ui/input_data_page/input_data_page.dart';
 import 'package:my_base/ui/input_data_page/input_data_page_model.dart';
 import 'package:provider/provider.dart';
 
+import '../view_all_files/all_files_page.dart';
 import '../view_data_page/view_data_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -28,6 +29,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('my informations'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AllFilesPage()));
+            },
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
       ),
       body: model.categories.isEmpty
           ? const Center(child: Text('No data'))

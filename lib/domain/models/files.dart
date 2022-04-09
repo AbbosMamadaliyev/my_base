@@ -1,26 +1,33 @@
-class Files {
-  final int id;
-  final int title_id;
-  final String path;
+class FileModel {
+  int? id;
+  // int category_id;
+  final String? path;
 
-  const Files({
+  static const String tableName = 'files';
+
+  FileModel({
     required this.id,
-    required this.title_id,
+    // required this.category_id,
+    required this.path,
+  });
+
+  FileModel.add({
+    // required this.category_id,
     required this.path,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
-      'title_id': this.title_id,
+      // 'category_id': this.category_id,
       'path': this.path,
     };
   }
 
-  factory Files.fromMap(Map<String, dynamic> map) {
-    return Files(
+  factory FileModel.fromMap(Map<String, dynamic> map) {
+    return FileModel(
       id: map['id'] as int,
-      title_id: map['title_id'] as int,
+      // category_id: map['category_id'] as int,
       path: map['path'] as String,
     );
   }

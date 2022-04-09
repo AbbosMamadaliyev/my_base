@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_base/ui/edit_item_page/edit_item_page_model.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:my_base/ui/input_data_page/input_data_page_model.dart';
+import 'package:my_base/ui/view_all_files/all_files_page_model.dart';
 import 'package:my_base/ui/view_data_page/view_data_page_model.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,8 @@ void main() {
             create: (BuildContext context) => ViewDataPageModel()),
         ChangeNotifierProvider(
             create: (BuildContext context) => EditItemPageModel()),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => AllFilesPageModel()),
       ],
       child: const MyApp(),
     ),

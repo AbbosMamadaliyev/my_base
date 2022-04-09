@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/categories.dart';
+import '../models/files.dart';
 
 class LocalDataProvider {
   LocalDataProvider._();
@@ -124,6 +125,16 @@ class LocalDataRepository {
     return res;
   }
 
+  Future<int?> addFile(FileModel fileModel) async {
+    final database = await db.database;
+    final res = database.insert(
+      FileModel.tableName,
+      fileModel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return res;
+  }
+
   Future<List<Credentials>> getCredentialsByCategoryId(int categoryId) async {
     final database = db.database;
     try {
@@ -158,12 +169,37 @@ class LocalDataRepository {
     }
   }
 
+  Future<List<FileModel>> getAllFiles() async {
+    final database = db.database;
+    try {
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db.query(FileModel.tableName);
+
+      return List.generate(
+        maps.length,
+        (index) => FileModel.fromMap(maps[index]),
+      );
+    } catch (e) {
+      print(' error: $e');
+      throw '$e';
+    }
+  }
+
   Future<int?> deleteTitle(int category_id) async {
     final database = await db.database;
     return database.delete(
       TitleModel.tableName,
       whereArgs: [category_id],
       where: 'category_id = ?',
+    );
+  }
+
+  Future<int?> deleteFile(int id) async {
+    final database = await db.database;
+    return database.delete(
+      FileModel.tableName,
+      whereArgs: [id],
+      where: 'id = ?',
     );
   }
 
