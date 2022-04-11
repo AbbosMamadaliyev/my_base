@@ -63,19 +63,6 @@ class AllFilesPageModel extends ChangeNotifier {
     print(lookupMimeType(path!)?.split('/').last);
     print(lookupMimeType(path));
 
-    /*final fileName = path.split('/').last;
-    final format = fileName.substring(fileName.length - 3, fileName.length);
-*/
-    /* if (format != 'pdf') {
-      errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
-      notifyListeners();
-    } else {
-      file = File(path);
-      final child = SfPdfViewer.file(file!);
-      errorText = '';
-      notifyListeners();
-    }*/
-
     final format = lookupMimeType(path)?.split('/').last;
 
     switch (format) {

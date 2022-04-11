@@ -6,28 +6,30 @@ import 'package:provider/provider.dart';
 import '../ui/home_page/home_page.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final String initialRoute;
+  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mainNavigation = MainNavigation();
 
     return MaterialApp(
-      home: const FirstWidget(),
+      // home: const FirstWidget(),
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           color: Color(0xff0e0c0c),
         ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Color(0xff0e0c0c),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-            Color(0xff0e0c0c),
+            const Color(0xff0e0c0c),
           )),
         ),
       ),
+      initialRoute: initialRoute,
       routes: mainNavigation.routes,
     );
   }
