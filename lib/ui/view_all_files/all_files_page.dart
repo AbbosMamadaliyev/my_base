@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../view_all_files/all_files_page_model.dart';
 
@@ -41,48 +39,69 @@ class _AllFilesPageState extends State<AllFilesPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-          itemCount: files.length,
-          itemBuilder: (context, index) {
-            final file = files[index];
+      body: files.isEmpty
+          ? const Center(child: Text('no files'))
+          : ListView.builder(
+              itemCount: files.length,
+              itemBuilder: (context, index) {
+                final file = files[index];
 
-            String? fileName;
+                String? fileName;
 
-            fileName = file.path?.split('/').last;
+                fileName = file.path?.split('/').last;
 
-            return ListTile(
-              onTap: () {
-                model.sendFile(index);
+                return ListTile(
+                  onTap: () {
+                    print('id: ${file.id}');
+                    model.sendFile(index);
 
-                model.errorText.isEmpty
-                    ? Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ViewFilePage()))
-                    : ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(model.errorText)));
-              },
-              leading: const Icon(Icons.insert_drive_file),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Icon(Icons.close),
+                    model.errorText.isEmpty
+                        ? Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ViewFilePage()))
+                        : ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(model.errorText)));
+                  },
+                  leading: const Icon(Icons.insert_drive_file),
+                  trailing: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: const Text(
+                                  'Are you really want delete this file from base?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('no'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    model.deleteFile(file.id!);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Deleted file')));
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('yes'),
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                    child: const Icon(Icons.close),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Icon(Icons.open_in_browser),
+                  title: Text(
+                    fileName ?? '#####',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ],
-              ),
-              title: Text(
-                fileName ?? '#####',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            );
-          }),
+                );
+              }),
     );
   }
 }
@@ -92,6 +111,7 @@ SfPdfViewer.network(
 'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf'),
 )*/
 
+/*
 class ExampleView extends StatelessWidget {
   ExampleView({Key? key}) : super(key: key);
 
@@ -162,6 +182,7 @@ class ExampleView extends StatelessWidget {
         });
   }
 }
+*/
 
 class ViewFilePage extends StatelessWidget {
   // final File file;
@@ -170,11 +191,11 @@ class ViewFilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = context.watch<AllFilesPageModel>().file;
+    final model = context.watch<AllFilesPageModel>();
 
     return Scaffold(
       appBar: AppBar(),
-      body: SfPdfViewer.file(file!),
+      body: model.body,
     );
   }
 }

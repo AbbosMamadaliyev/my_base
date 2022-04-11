@@ -7,11 +7,13 @@ import 'package:mime/mime.dart';
 import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/files.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class AllFilesPageModel extends ChangeNotifier {
   final _dbRepository = LocalDataRepository();
   FilePickerResult? result;
   File? file;
+  String errorText = '';
 
   final List<FileModel> _files = [];
 
@@ -51,7 +53,7 @@ class AllFilesPageModel extends ChangeNotifier {
     });
   }
 
-  String errorText = '';
+  Widget body = Container();
 
   void sendFile(int index) async {
     var path = _files[index].path;
@@ -59,17 +61,55 @@ class AllFilesPageModel extends ChangeNotifier {
     print('path: $path');
 
     print(lookupMimeType(path!)?.split('/').last);
+    print(lookupMimeType(path));
 
-    final fileName = path.split('/').last;
+    /*final fileName = path.split('/').last;
     final format = fileName.substring(fileName.length - 3, fileName.length);
-
-    if (format != 'pdf') {
+*/
+    /* if (format != 'pdf') {
       errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
       notifyListeners();
     } else {
       file = File(path);
+      final child = SfPdfViewer.file(file!);
       errorText = '';
       notifyListeners();
+    }*/
+
+    final format = lookupMimeType(path)?.split('/').last;
+
+    switch (format) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        file = File(path);
+        body = Image.file(file!);
+        errorText = '';
+        notifyListeners();
+        break;
+      case 'msword':
+      case 'docx':
+        errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
+        // file = File(path);
+        // errorText = '';
+        notifyListeners();
+        break;
+      case 'msexcel':
+        errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
+
+        // file = File(path);
+        // errorText = '';
+        notifyListeners();
+        break;
+      case 'pdf':
+        file = File(path);
+        body = SfPdfViewer.file(file!);
+        errorText = '';
+        notifyListeners();
+        break;
+      default:
+        errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
+        notifyListeners();
     }
   }
 
