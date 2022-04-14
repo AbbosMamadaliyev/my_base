@@ -29,11 +29,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('my informations'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AllFilesPage()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AllFilesPage()));
             },
             icon: const Icon(Icons.more_vert),
           ),

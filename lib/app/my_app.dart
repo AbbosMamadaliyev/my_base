@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
     final mainNavigation = MainNavigation();
 
     return MaterialApp(
-      // home: const FirstWidget(),
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           color: Color(0xff0e0c0c),
@@ -29,7 +28,8 @@ class MyApp extends StatelessWidget {
           )),
         ),
       ),
-      initialRoute: initialRoute,
+      // initialRoute: initialRoute,
+      home: const MyHomePage(),
       routes: mainNavigation.routes,
     );
   }

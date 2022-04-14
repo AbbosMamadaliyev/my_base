@@ -26,6 +26,7 @@ class _AllFilesPageState extends State<AllFilesPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AllFilesPageModel>().requestStoragePermission();
     final model = context.watch<AllFilesPageModel>();
     final files = model.files;
 
@@ -53,7 +54,7 @@ class _AllFilesPageState extends State<AllFilesPage> {
                 return ListTile(
                   onTap: () {
                     print('id: ${file.id}');
-                    model.sendFile(index);
+                    model.viewMyFile(index);
 
                     model.errorText.isEmpty
                         ? Navigator.of(context).push(MaterialPageRoute(
@@ -62,36 +63,72 @@ class _AllFilesPageState extends State<AllFilesPage> {
                             SnackBar(content: Text(model.errorText)));
                   },
                   leading: const Icon(Icons.insert_drive_file),
-                  trailing: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: const Text(
-                                  'Are you really want delete this file from base?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('no'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    model.deleteFile(file.id!);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Deleted file')));
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('yes'),
-                                ),
-                              ],
-                            );
-                          });
-                    },
-                    child: const Icon(Icons.close),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: const Text(
+                                      'Are you really want delete this file from base?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('no'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        model.deleteFile(file.id!);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text('Deleted file')));
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('yes'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: const Icon(Icons.close),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: const Text(
+                                      'Are you really want delete this file from base?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('no'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        model.deleteFile(file.id!);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text('Deleted file')));
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('yes'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: const Icon(Icons.lock),
+                      )
+                    ],
                   ),
                   title: Text(
                     fileName ?? '#####',
