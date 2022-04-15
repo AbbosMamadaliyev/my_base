@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mime/mime.dart';
 import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/files.dart';
-import 'package:my_base/zzzzzzzzzzz/encrypt.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -33,6 +32,8 @@ class AllFilesPageModel extends ChangeNotifier {
 
     // encryptData(path);
     encryptMethod(path);
+
+    // moveFile(path, fileName);
   }
 
   void encryptMethod(String filepath) async {
@@ -47,10 +48,11 @@ class AllFilesPageModel extends ChangeNotifier {
   }
 
   downloadAndCreate(String filePath, Directory d, String fileName) async {
-    var encResult = _encryptData(filePath.codeUnits);
+    final oldFile = File(filePath);
+    // var encResult = _encryptData(await oldFile.readAsBytes());
 
     final fileNameWithPath = d.path + '/$fileName.aes';
-    String p = await _writeData(encResult.bytes, fileNameWithPath);
+    String p = await _writeData(await oldFile.readAsBytes(), fileNameWithPath);
 
     /// add path to sql base
     _addFilePathToSql(fileNameWithPath);
@@ -58,42 +60,53 @@ class AllFilesPageModel extends ChangeNotifier {
     print('encrypted path: $p');
   }
 
-  Encrypted _encryptData(plainString) {
+  ///
+  void moveFile(String filePath, String fileName) async {
+    Directory d = await getExternalVisibleDir;
+    final fileNameWithPath = d.path + '/$fileName';
+
+    final oldFile = File(filePath);
+
+    final f = File(fileNameWithPath);
+    await f.writeAsBytes((await oldFile.readAsBytes()));
+  }
+
+  ///
+
+  enc.Encrypted _encryptData(plainString) {
     final encrypted =
         MyEncryptKey.encrypter.encryptBytes(plainString, iv: MyEncryptKey.iv);
     return encrypted;
   }
 
   String _decryptData(Uint8List encData) {
-    final en = Encrypted(encData);
+    final en = enc.Encrypted(encData);
 
     final decrypted = MyEncryptKey.encrypter.decrypt(en, iv: MyEncryptKey.iv);
     return decrypted;
   }
 
   getNormalFile(Directory d, String fileName) async {
-    final encData = await _readData(d.path + '/$fileName.aes');
-    var plainData = _decryptData(encData);
-    String p = await _writeData(plainData.codeUnits, d.path + '/$fileName');
+    final encData = await _readDataAsBytes(d.path + '/$fileName.aes');
+    // final newFile = File();
+    // var plainData = _decryptData(encData);
+    // print('das: ${plainData}');
+    String p = await _writeData(encData, d.path + '/$fileName');
     print('file decrypted ok : $p');
   }
 
-  Future<Uint8List> _readData(fileNameWithPath) async {
-    print('reading data...');
-    print('data..: $fileNameWithPath');
-
+  Future<Uint8List> _readDataAsBytes(fileNameWithPath) async {
     final f = File(fileNameWithPath);
     return await f.readAsBytes();
   }
 
   _writeData(List<int> dataToWrite, fileNameWithPath) async {
-    // print('writing data....');
     final f = File(fileNameWithPath);
     await f.writeAsBytes(dataToWrite);
     return f.absolute.toString();
   }
 
-  void decryptBtn(String fileName) async {
+  void decryptMethod(String fileName) async {
     if (isGranted) {
       Directory d = await getExternalVisibleDir;
 
@@ -107,7 +120,7 @@ class AllFilesPageModel extends ChangeNotifier {
   void _addFilePathToSql(String? path) {
     final fileModel = FileModel.add(path: path);
 
-    _dbRepository.addFile(fileModel).then((value) => print('value id: $value'));
+    _dbRepository.addFile(fileModel);
   }
 
   void getAllFiles() {
@@ -121,16 +134,14 @@ class AllFilesPageModel extends ChangeNotifier {
   void viewMyFile(int index) async {
     var path = _files[index].path;
 
-    print('path: $path');
     final fName = path!.split('/').last.split('.').getRange(0, 2).join('.');
-    print('name: $fName');
 
     // print(lookupMimeType(path!)?.split('/').last);
     // print(lookupMimeType(path));
 
-    decryptBtn(fName);
+    // decryptMethod(fName);
 
-    final format = lookupMimeType(path)?.split('/').last;
+    final format = fName.split('.').last;
     print('format: $format');
 
     switch (format) {
@@ -203,6 +214,13 @@ class AllFilesPageModel extends ChangeNotifier {
   }
 }
 
+class MyEncryptKey {
+  static final key = enc.Key.fromUtf8('my 32 length key................');
+
+  static final encrypter = enc.Encrypter(enc.AES(key));
+  static final iv = enc.IV.fromLength(16);
+}
+
 /*void encryptData(String path) {
     // var path = _files[index].path;
 
@@ -237,10 +255,3 @@ class AllFilesPageModel extends ChangeNotifier {
     // EncryptData.decrypt_file(path!);
   }
 */
-
-class MyEncryptKey {
-  static final key = KeyZZ.fromUtf8('my 32 length key................');
-
-  static get encrypter => EncrypterZZ(AESZZ(key));
-  static final iv = IVZZ.fromLength(16);
-}
