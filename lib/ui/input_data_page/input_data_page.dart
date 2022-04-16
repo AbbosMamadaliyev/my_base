@@ -62,7 +62,7 @@ class _InputInfoPageState extends State<InputInfoPage> {
                           return AlertDialog(
                             content: SizedBox(
                               width: double.maxFinite,
-                              // height: 450,
+                              height: categories.length >= 8 ? 400 : null,
                               child: ListView(
                                 shrinkWrap: true,
                                 physics: const BouncingScrollPhysics(),
