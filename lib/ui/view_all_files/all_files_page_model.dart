@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/files.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class AllFilesPageModel extends ChangeNotifier {
@@ -27,70 +29,37 @@ class AllFilesPageModel extends ChangeNotifier {
     result = await FilePicker.platform.pickFiles();
     final path = result?.files.single.path;
 
-    fileName = path!.split('/').last;
-    notifyListeners();
+    if (path == null) return;
 
-    // encryptData(path);
-    encryptMethod(path);
+    fileName = path.split('/').last;
 
-    // moveFile(path, fileName);
+    encryptMethod(path, fileName);
   }
 
-  void encryptMethod(String filepath) async {
+  void encryptMethod(String filepath, String fileName) async {
     if (isGranted) {
       Directory d = await getExternalVisibleDir;
 
-      downloadAndCreate(filepath, d, fileName);
+      _downloadAndCreate(filepath, d, fileName);
     } else {
       print('not permission');
       requestStoragePermission();
     }
   }
 
-  downloadAndCreate(String filePath, Directory d, String fileName) async {
+  _downloadAndCreate(String filePath, Directory d, String fileName) async {
     final oldFile = File(filePath);
-    // var encResult = _encryptData(await oldFile.readAsBytes());
 
     final fileNameWithPath = d.path + '/$fileName.aes';
-    String p = await _writeData(await oldFile.readAsBytes(), fileNameWithPath);
+    await _writeData(await oldFile.readAsBytes(), fileNameWithPath);
 
     /// add path to sql base
     _addFilePathToSql(fileNameWithPath);
-
-    print('encrypted path: $p');
-  }
-
-  ///
-  void moveFile(String filePath, String fileName) async {
-    Directory d = await getExternalVisibleDir;
-    final fileNameWithPath = d.path + '/$fileName';
-
-    final oldFile = File(filePath);
-
-    final f = File(fileNameWithPath);
-    await f.writeAsBytes((await oldFile.readAsBytes()));
-  }
-
-  ///
-
-  enc.Encrypted _encryptData(plainString) {
-    final encrypted =
-        MyEncryptKey.encrypter.encryptBytes(plainString, iv: MyEncryptKey.iv);
-    return encrypted;
-  }
-
-  String _decryptData(Uint8List encData) {
-    final en = enc.Encrypted(encData);
-
-    final decrypted = MyEncryptKey.encrypter.decrypt(en, iv: MyEncryptKey.iv);
-    return decrypted;
   }
 
   getNormalFile(Directory d, String fileName) async {
     final encData = await _readDataAsBytes(d.path + '/$fileName.aes');
-    // final newFile = File();
-    // var plainData = _decryptData(encData);
-    // print('das: ${plainData}');
+
     String p = await _writeData(encData, d.path + '/$fileName');
     print('file decrypted ok : $p');
   }
@@ -133,21 +102,23 @@ class AllFilesPageModel extends ChangeNotifier {
 
   void viewMyFile(int index) async {
     var path = _files[index].path;
+    print('path: $path');
+
+    print(await getApplicationDocumentsDirectory());
+    print(await getApplicationSupportDirectory());
+    print(await getExternalStorageDirectory());
+    print(await getTemporaryDirectory());
+    print(await getDatabasesPath());
 
     final fName = path!.split('/').last.split('.').getRange(0, 2).join('.');
 
-    // print(lookupMimeType(path!)?.split('/').last);
-    // print(lookupMimeType(path));
-
-    // decryptMethod(fName);
-
     final format = fName.split('.').last;
-    print('format: $format');
 
     switch (format) {
       case 'jpg':
       case 'jpeg':
       case 'png':
+      case 'gif':
         file = File(path);
         body = Image.file(file!);
         errorText = '';
@@ -179,6 +150,35 @@ class AllFilesPageModel extends ChangeNotifier {
     }
   }
 
+  IconData checkIcon(int index) {
+    IconData icon;
+    final format =
+        _files[index].path!.split('/').last.split('.').getRange(0, 2).last;
+
+    switch (format) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        icon = Icons.photo;
+        break;
+      case 'msword':
+      case 'docx':
+        icon = Icons.insert_drive_file;
+        break;
+      case 'msexcel':
+        icon = Icons.insert_drive_file;
+        break;
+      case 'pdf':
+        icon = Icons.picture_as_pdf;
+        break;
+      default:
+        icon = Icons.insert_drive_file;
+    }
+
+    return icon;
+  }
+
   Future get getAppDir async {
     final appDocDir = await getExternalStorageDirectory();
     return appDocDir;
@@ -194,6 +194,20 @@ class AllFilesPageModel extends ChangeNotifier {
       final externalDir = Directory('/storage/emulated/0/MyEncFolder');
       return externalDir;
     }
+  }
+
+  Future get getDataAppDir async {
+    final dir = await getApplicationDocumentsDirectory();
+    return dir;
+    /*  if (await Directory('/storage/emulated/0/Android/data').exists()) {
+      final externalDir = Directory('/storage/emulated/0/MyEncFolder');
+      return externalDir;
+    } else {
+      await Directory('/storage/emulated/0/MyEncFolder')
+          .create(recursive: true);
+      final externalDir = Directory('/storage/emulated/0/MyEncFolder');
+      return externalDir;
+    }*/
   }
 
   requestStoragePermission() async {

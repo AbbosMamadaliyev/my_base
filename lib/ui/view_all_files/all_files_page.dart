@@ -62,76 +62,47 @@ class _AllFilesPageState extends State<AllFilesPage> {
                         : ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(model.errorText)));
                   },
-                  leading: const Icon(Icons.insert_drive_file),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: const Text(
-                                      'Are you really want delete this file from base?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('no'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        model.deleteFile(file.id!);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                                content: Text('Deleted file')));
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('yes'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Icon(Icons.close),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: const Text(
-                                      'Are you really want delete this file from base?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('no'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        model.deleteFile(file.id!);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                                content: Text('Deleted file')));
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('yes'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        child: const Icon(Icons.lock),
-                      )
-                    ],
+                  leading: Icon(
+                    model.checkIcon(index),
+                    color: Colors.black,
+                  ),
+                  trailing: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: const Text(
+                                  'Are you really want delete this file from base?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('no'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    model.deleteFile(file.id!);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Deleted file')));
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('yes'),
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.black87,
+                    ),
                   ),
                   title: Text(
-                    fileName ?? '#####',
+                    fileName?.split('.').getRange(0, 2).join('.') ?? '#####',
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -141,89 +112,14 @@ class _AllFilesPageState extends State<AllFilesPage> {
               }),
     );
   }
-}
-
-/*
-SfPdfViewer.network(
-'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf'),
-)*/
-
-/*
-class ExampleView extends StatelessWidget {
-  ExampleView({Key? key}) : super(key: key);
-
-  FilePickerResult? result;
-  File? file;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                file = File(result?.files.single.path ?? '');
-                print(result?.files.single.path);
-              } else {
-                // User canceled the picker
-              }
-            },
-            child: const Text('get file'),
-          ),
-          Text('file name: ${result?.names.map((e) => e)}'),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ViewFilePage()));
-            },
-            child: Text('view file'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              readFilesFromAssets(context);
-            },
-            child: Text('read file'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  readFilesFromAssets(context) async {
-    var assetContent = await rootBundle.load(file!.path);
-    print("assetContent : $assetContent");
-
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Select file'),
-            content: Text('file name: rrr'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Back')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Save')),
-            ],
-          );
-        });
+  void dispose() {
+    super.dispose();
   }
 }
-*/
 
 class ViewFilePage extends StatelessWidget {
-  // final File file;
-
   const ViewFilePage({Key? key}) : super(key: key);
 
   @override

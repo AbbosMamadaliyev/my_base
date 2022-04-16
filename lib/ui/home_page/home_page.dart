@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AllFilesPage()));
             },
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.insert_drive_file_rounded),
           ),
         ],
       ),
