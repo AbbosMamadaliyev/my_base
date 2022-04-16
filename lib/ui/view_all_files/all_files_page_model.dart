@@ -196,20 +196,6 @@ class AllFilesPageModel extends ChangeNotifier {
     }
   }
 
-  Future get getDataAppDir async {
-    final dir = await getApplicationDocumentsDirectory();
-    return dir;
-    /*  if (await Directory('/storage/emulated/0/Android/data').exists()) {
-      final externalDir = Directory('/storage/emulated/0/MyEncFolder');
-      return externalDir;
-    } else {
-      await Directory('/storage/emulated/0/MyEncFolder')
-          .create(recursive: true);
-      final externalDir = Directory('/storage/emulated/0/MyEncFolder');
-      return externalDir;
-    }*/
-  }
-
   requestStoragePermission() async {
     if (!await Permission.storage.isGranted) {
       PermissionStatus result = await Permission.storage.request();
@@ -218,13 +204,22 @@ class AllFilesPageModel extends ChangeNotifier {
         notifyListeners();
       } else {
         isGranted = false;
-        // notifyListeners();
       }
     }
   }
 
-  void deleteFile(int id) {
+  void deleteFileOnDb(int id, int index) {
     _dbRepository.deleteFile(id);
+    _deleteFileOnDir(index);
+  }
+
+  void _deleteFileOnDir(int index) async {
+    var path = _files[index].path;
+
+    final file = File(path!);
+    await file.delete().then((value) {
+      print('delted file');
+    });
   }
 }
 
@@ -234,38 +229,3 @@ class MyEncryptKey {
   static final encrypter = enc.Encrypter(enc.AES(key));
   static final iv = enc.IV.fromLength(16);
 }
-
-/*void encryptData(String path) {
-    // var path = _files[index].path;
-
-    final key = KeyZZ.fromUtf8('my 32 length key................');
-
-    final encrypter = EncrypterZZ(AESZZ(key));
-    final iv = IVZZ.fromLength(16);
-
-    // final res = encrypter.encrypt(path);
-    final encrypted = encrypter.encrypt(path, iv: iv);
-
-    print('byts: ${encrypted.bytes}');
-    print('bas64: ${encrypted.base64}');
-  }
-
-  void decryptData(int index) {
-    var path = _files[index].path;
-
-    print('path: $path');
-
-    final plainText = path;
-    final key = KeyZZ.fromUtf8('my 32 length key................');
-    final iv = IVZZ.fromLength(16);
-
-    final encrypter = EncrypterZZ(AESZZ(key));
-
-    final encrypted = encrypter.encrypt(plainText!, iv: iv);
-    final decrypted = encrypter.decrypt(encrypted, iv: iv);
-
-    print('sd: $decrypted');
-
-    // EncryptData.decrypt_file(path!);
-  }
-*/

@@ -83,7 +83,7 @@ class _AllFilesPageState extends State<AllFilesPage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    model.deleteFile(file.id!);
+                                    model.deleteFileOnDb(file.id!, index);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                             content: Text('Deleted file')));

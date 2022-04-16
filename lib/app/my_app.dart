@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
           )),
         ),
       ),
-      // initialRoute: initialRoute,
-      home: const MyHomePage(),
+      initialRoute: initialRoute,
+      // home: const MyHomePage(),
       routes: mainNavigation.routes,
     );
   }
