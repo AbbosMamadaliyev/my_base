@@ -9,7 +9,6 @@ import 'package:my_base/domain/dataproviders/local_dataprovider.dart';
 import 'package:my_base/domain/models/files.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class AllFilesPageModel extends ChangeNotifier {
@@ -103,12 +102,13 @@ class AllFilesPageModel extends ChangeNotifier {
   void viewMyFile(int index) async {
     var path = _files[index].path;
     print('path: $path');
+    print('index: $index');
 
-    print(await getApplicationDocumentsDirectory());
-    print(await getApplicationSupportDirectory());
-    print(await getExternalStorageDirectory());
-    print(await getTemporaryDirectory());
-    print(await getDatabasesPath());
+    // print(await getApplicationDocumentsDirectory());
+    // print(await getApplicationSupportDirectory());
+    // print(await getExternalStorageDirectory());
+    // print(await getTemporaryDirectory());
+    // print(await getDatabasesPath());
 
     final fName = path!.split('/').last.split('.').getRange(0, 2).join('.');
 

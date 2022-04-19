@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_base/main_navigation.dart';
+import 'package:my_base/ui/example_page.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: initialRoute,
-      // home: const MyHomePage(),
+      // home: const ExamplePage(),
       routes: mainNavigation.routes,
     );
   }

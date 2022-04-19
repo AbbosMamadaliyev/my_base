@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,10 +13,13 @@ class SignInProvider extends ChangeNotifier {
   final passwordController = TextEditingController();
 
   String? _loginErrorMessage;
+
   String? get loginErrorMessage => _loginErrorMessage;
 
   bool _isAuthProgress = false;
+
   bool get isAuthProgress => _isAuthProgress;
+
   bool get canStartAuth => !_isAuthProgress;
 
   void loginButtonAction(BuildContext context) async {
@@ -53,6 +57,32 @@ class SignInProvider extends ChangeNotifier {
       emailController.clear();
       passwordController.clear();
       notifyListeners();
+    }
+  }
+
+  Future<void> checkInternet(BuildContext context) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.mobile) {
+      // I am connected to a mobile network.
+      print('ok internet');
+      loginButtonAction(context);
+      return;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      // I am connected to a wifi network.
+      print('ok wifi');
+
+      loginButtonAction(context);
+      return;
+    } else if (connectivityResult == ConnectivityResult.none) {
+      print('no');
+
+      _loginErrorMessage = ' - No internet';
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('No internet, please check your connectivity!'),
+        backgroundColor: Colors.red,
+      ));
+      notifyListeners();
+      return;
     }
   }
 

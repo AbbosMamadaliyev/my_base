@@ -12,9 +12,8 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<SignInProvider>();
 
-    final onPressed = model.canStartAuth == true
-        ? () => model.loginButtonAction(context)
-        : null;
+    final onPressed =
+        model.canStartAuth == true ? () => model.checkInternet(context) : null;
 
     final child = model.isAuthProgress == true
         ? const SizedBox(
