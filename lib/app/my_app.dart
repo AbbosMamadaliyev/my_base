@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_base/main_navigation.dart';
-import 'package:my_base/ui/example_page.dart';
 import 'package:my_base/ui/home_page/home_page_model.dart';
+import 'package:my_base/ui/view_all_files/all_files_page.dart';
 import 'package:provider/provider.dart';
 
 import '../ui/home_page/home_page.dart';
@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
           )),
         ),
       ),
-      initialRoute: initialRoute,
-      // home: const ExamplePage(),
+      // initialRoute: initialRoute,
+      home: const AllFilesPage(),
       routes: mainNavigation.routes,
     );
   }

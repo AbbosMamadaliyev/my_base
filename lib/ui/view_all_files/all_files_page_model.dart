@@ -102,7 +102,6 @@ class AllFilesPageModel extends ChangeNotifier {
   void viewMyFile(int index) async {
     var path = _files[index].path;
     print('path: $path');
-    print('index: $index');
 
     // print(await getApplicationDocumentsDirectory());
     // print(await getApplicationSupportDirectory());
@@ -124,7 +123,7 @@ class AllFilesPageModel extends ChangeNotifier {
         errorText = '';
         notifyListeners();
         break;
-      case 'msword':
+      case 'doc':
       case 'docx':
         errorText = 'ochishda xatolik! format qollab quvvatlanmadi.';
         // file = File(path);
