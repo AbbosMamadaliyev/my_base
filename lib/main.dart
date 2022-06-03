@@ -13,6 +13,7 @@ import 'app/my_app.dart';
 import 'domain/dataproviders/auth_service/auth_service.dart';
 import 'domain/models/user.dart';
 import 'main_navigation.dart';
+//change
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
