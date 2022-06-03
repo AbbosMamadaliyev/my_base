@@ -14,7 +14,7 @@ import 'domain/dataproviders/auth_service/auth_service.dart';
 import 'domain/models/user.dart';
 import 'main_navigation.dart';
 //change
-
+// chaine
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
